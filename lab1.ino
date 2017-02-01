@@ -1,17 +1,16 @@
 /******************************************************************************
-*
-* Names:        Thomas Dodd 6822414
-*               Peng Liu 4229132
-* Course Code:  SEG 4145
-* Lab Number:   1
-* File name:    lab1.ino
-* Date:         January 18, 2017
-*
-* Description
-* *************
-* This file contains all functions for lab 1.
-******************************************************************************
-*/
+ * Names:        Thomas Dodd 6822414
+ *               Peng Liu 4229132
+ * Course Code:  SEG 4145
+ * Lab Number:   1
+ * File name:    lab1.ino
+ * Date:         January 18, 2017
+ *
+ * Description:
+ *
+ * This file contains all functions for lab 1.
+ ******************************************************************************
+ */
 
 #include <SoftwareSerial.h>
 
@@ -22,9 +21,16 @@ int LED_PIN = 13;
 int LCD_PIN = 18;
 int RIGHT_MOTOR_PIN = 45; // Forward: 10, backward: 191.5
 int LEFT_MOTOR_PIN = 8; // Forward: 191.5, backward: 10
-float FULL_ROTATION_TIME = 50; // Time (in ms) required to complete one full rotation.
 char THOMAS_NUM[] = "6822414";
 char PENG_NUM[] = "4229132";
+
+/**
+ * Rotation times (in ms).
+ */
+float THREE_SIXTY = 0;
+float ONE_EIGHTY = 0;
+float NINETY = 0;
+float FORTY_FIVE = 0;
 
 /**
  * printToFirst, Prints text on the 1st line of the LCD display.
@@ -88,46 +94,46 @@ void blinkLed(int num) {
 /**
  * moveForward, Moves the robot forward for a specified amount of time and prints action to LCD.
  * 
- * @param sec, the time in seconds for the wheels to turn.
+ * @param time, the time (in ms) for the wheels to turn.
  * @param *LCD, a pointer to the LCD screen.
  */
-void moveForward(int sec, SoftwareSerial* LCD) {
-  clearLcd(&LCD);
-  printToFirst("Moving");
-  printToSecond("Forward");
+void moveForward(int time, SoftwareSerial* LCD) {
+  clearLcd(*LCD);
+  printToFirst(*LCD, "Moving");
+  printToSecond(*LCD, "Forward");
   analogWrite(RIGHT_MOTOR_PIN, 10);
   analogWrite(LEFT_MOTOR_PIN, 191.5);
-  delay(10);
+  delay(time);
 }
 
 /**
  * turnLeft, Turns the robot left and prints action to LCD.
  * 
- * @param angle, the angle of the turn.
+ * @param time, the time required to make the turn (in ms)
  * @param *LCD, a pointer to the LCD screen.
  */
-void turnLeft(int angle, SoftwareSerial* LCD) {
-  clearLcd(&LCD);
-  printToFirst("Rotating");
-  printToSecond("Left");
+void turnLeft(int time, SoftwareSerial* LCD) {
+  clearLcd(*LCD);
+  printToFirst(*LCD, "Rotating");
+  printToSecond(*LCD, "Left");
   analogWrite(RIGHT_MOTOR_PIN, 10);
   analogWrite(LEFT_MOTOR_PIN, 10);
-  delay(10);
+  delay(time);
 }
 
 /**
  * turnRight, Turns the robot right and prints action to LCD.
  *
- * @param angle, the angle of the turn.
+ * @param time, the time required to make the turn (in ms).
  * @param *LCD, a pointer to the LCD screen.
  */
-void turnRight(int increment, SoftwareSerial* LCD) {
-  clearLcd(&LCD);
-  printToFirst("Rotating");
-  printToSecond("Right");
+void turnRight(int time, SoftwareSerial* LCD) {
+  clearLcd(*LCD);
+  printToFirst(*LCD, "Rotating");
+  printToSecond(*LCD, "Right");
   analogWrite(RIGHT_MOTOR_PIN, 191.5);
   analogWrite(LEFT_MOTOR_PIN, 191.5);
-  delay(10);
+  delay(time);
 }
 
 /**
@@ -143,24 +149,29 @@ void stop(SoftwareSerial* LCD) {
 }
 
 /**
- * path1, Steps required to complete path 1.
- *
+ * path1, Traverse path 1.
+ * 
  * @param *LCD, a pointer to the LCD screen.
  */
 void path1(SoftwareSerial* LCD) {
-  moveForward(10);  
-  turnLeft(90);
+  moveForward(10000, *LCD);  
+  stop(*LCD);
+  turnLeft(NINETY, *LCD);
 
-  moveForward(10);
-  turnRight(90);
+  moveForward(10000, *LCD);
+  stop(*LCD);
+  turnRight(NINETY, *LCD);
 
-  moveForward(10);
-  turnRight(90);
+  moveForward(10000, *LCD);
+  stop(*LCD);
+  turnRight(NINETY, *LCD);
 
-  moveForward(10);
-  turnLeft(90);
+  moveForward(10000);
+  stop(*LCD);
+  turnLeft(NINETY);
 
-  moveForward(10);
+  moveForward(10000);
+  stop(*LCD);
 }
 
 /*
@@ -169,19 +180,26 @@ void path1(SoftwareSerial* LCD) {
  * @param *LCD, a pointer to the LCD screen.
  */
 void path2(SoftwareSerial* LCD) {
-  moveForward(10);
-  turnRight(90);
+  moveForward(10000);
+  stop(*LCD);
+  turnRight(NINETY);
 
-  moveForward(10);
-  turnLeft(225);
+  moveForward(10000);
+  stop(*LCD);
+  turnLeft(NINETY);
+  turnLeft(FORTY_FIVE);
 
-  moveForward(10);
-  turnRight(315);
+  moveForward(10000);
+  stop(*LCD);
+  turnRight(NINETY);
+  turnRight(FORTY_FIVE);
 
-  moveForward(10);
-  turnLeft(90);
+  moveForward(10000);
+  stop(*LCD);
+  turnLeft(NINETY);
 
-  moveForward(10);
+  moveForward(10000);
+  stop(*LCD);
 }
 
 void setup() {
