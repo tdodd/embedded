@@ -25,7 +25,7 @@ int LEFT_MOTOR_PIN = 8; // Forward: 191.5, backward: 10
 float FULL_ROTATION_TIME = 50; // Time (in ms) required to complete one full rotation.
 char THOMAS_NUM[] = "6822414";
 char PENG_NUM[] = "4229132";
-int FULL_TURN_MICROS = 5000;
+int FULL_TURN_MICROS = 4130;
 
 /**
  * printToFirst, Prints text on the 1st line of the LCD display.
@@ -94,12 +94,12 @@ void blinkLed(int num) {
  */
 void moveForward(int micro_sec, SoftwareSerial* LCD) {
   clearLcd(LCD);
-  printToFirst("Moving");
-  printToSecond("Forward");
+  printToFirst(LCD, "Moving");
+  printToSecond(LCD, "Forward");
   analogWrite(RIGHT_MOTOR_PIN, 10);
   analogWrite(LEFT_MOTOR_PIN, 191.5);
   delay(micro_sec);
-  stop();
+  stop(LCD);
 }
 
 /**
@@ -110,12 +110,12 @@ void moveForward(int micro_sec, SoftwareSerial* LCD) {
  */
 void turnLeft(int increment, SoftwareSerial* LCD) {
   clearLcd(LCD);
-  printToFirst("Rotating");
-  printToSecond("Left");
+  printToFirst(LCD, "Rotating");
+  printToSecond(LCD, "Left");
   analogWrite(RIGHT_MOTOR_PIN, 10);
   analogWrite(LEFT_MOTOR_PIN, 10);
   delay(FULL_TURN_MICROS * increment/8);
-  stop();
+  stop(LCD);
 }
 
 /**
@@ -126,12 +126,12 @@ void turnLeft(int increment, SoftwareSerial* LCD) {
  */
 void turnRight(int increment, SoftwareSerial* LCD) {
   clearLcd(LCD);
-  printToFirst("Rotating");
-  printToSecond("Right");
+  printToFirst(LCD, "Rotating");
+  printToSecond(LCD, "Right");
   analogWrite(RIGHT_MOTOR_PIN, 191.5);
   analogWrite(LEFT_MOTOR_PIN, 191.5);
   delay(FULL_TURN_MICROS * increment/8);
-  stop();
+  stop(LCD);
 }
 
 /**
@@ -141,7 +141,7 @@ void turnRight(int increment, SoftwareSerial* LCD) {
  */
 void stop(SoftwareSerial* LCD) {
   clearLcd(LCD);
-  printToFirst("Stopping");
+  printToFirst(LCD, "Stopping");
   analogWrite(RIGHT_MOTOR_PIN, 0);
   analogWrite(LEFT_MOTOR_PIN, 0);
 }
@@ -152,19 +152,19 @@ void stop(SoftwareSerial* LCD) {
  * @param *LCD, a pointer to the LCD screen.
  */
 void path1(SoftwareSerial* LCD) {
-  moveForward(10);  
-  turnLeft(90);
+  moveForward(LCD, 10000);  
+  turnLeft(LCD, 2);
 
-  moveForward(10);
-  turnRight(90);
+  moveForward(LCD, 10000);
+  turnRight(LCD, 2);
 
-  moveForward(10);
-  turnRight(90);
+  moveForward(LCD, 10000);
+  turnRight(LCD, 2);
 
-  moveForward(10);
-  turnLeft(90);
+  moveForward(LCD, 10000);
+  turnLeft(LCD, 2);
 
-  moveForward(10);
+  moveForward(LCD, 10000);
 }
 
 /*
@@ -173,19 +173,19 @@ void path1(SoftwareSerial* LCD) {
  * @param *LCD, a pointer to the LCD screen.
  */
 void path2(SoftwareSerial* LCD) {
-  moveForward(10);
-  turnRight(90);
+  moveForward(LCD, 10);
+  turnRight(LCD, 2);
 
-  moveForward(10);
-  turnLeft(225);
+  moveForward(LCD, 10);
+  turnLeft(LCD, 3);
 
-  moveForward(10);
-  turnRight(315);
+  moveForward(LCD, 10);
+  turnRight(LCD, 3);
 
-  moveForward(10);
-  turnLeft(90);
+  moveForward(LCD, 10);
+  turnLeft(LCD, 2);
 
-  moveForward(10);
+  moveForward(LCD, 10);
 }
 
 void setup() {
@@ -215,17 +215,17 @@ void setup() {
   delay(5000);
   
   // Print 'Path 2' for 3 seconds.
-  printToFirst(&LCD, "Path");
-  PrintToSecond(&LCD, "2");
-  delay(3000);
-  clearLcd(&LCD)
+  //printToFirst(&LCD, "Path");
+  //PrintToSecond(&LCD, "2");
+  //delay(3000);
+  //clearLcd(&LCD)
   
-  path2(&LCD); // Traverse path 2.  
-  delay(5000);
+  //path2(&LCD); // Traverse path 2.  
+  //delay(5000);
 
   // Traverse both paths in reverse.
-  reversePath1(&LCD);
-  reversePath2(&LCD);
+  //reversePath1(&LCD);
+  //reversePath2(&LCD);
 }
 
 void loop() {
