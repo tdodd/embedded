@@ -1,44 +1,48 @@
 /******************************************************************************
-*
-* Names:        Thomas Dodd 6822414
-*               Peng Liu 4229132
-* Course Code:  SEG 4145
-* Lab Number:   2
-* File name:    lab2.ino
-* Date:         February 1st, 2017
-*
-* Description
-* *************
-* This file contains all functions for lab 2.
-******************************************************************************
-*/
+ *
+ * Names:        Thomas Dodd 6822414
+ *               Peng Liu 4229132
+ * Course Code:  SEG 4145
+ * Lab Number:   2
+ * File name:    lab2.ino
+ * Date:         February 1st, 2017
+ *
+ * Description
+ * *************
+ * This file contains all functions for lab 2.
+ ******************************************************************************
+ */
 
 #include <SoftwareSerial.h>
 
 /**
- * Globals
+ * Global pin values.
  */
-int LED_PIN = 13;
-int LCD_PIN = 18;
-int RIGHT_MOTOR_PIN = 45;
-int LEFT_MOTOR_PIN = 8;
+const int LED_PIN = 13;
+const int LCD_PIN = 18;
+const int RIGHT_MOTOR_PIN = 45;
+const int LEFT_MOTOR_PIN = 8;
+const int SONAR_PIN = 22;
 
 /**
  * Forward and backward movement
  */
-int LEFT_MOTOR_BACKWARD_PULSE = 200;
-int RIGHT_MOTOR_BACKWARD_PULSE = 100;
-int LEFT_MOTOR_FORWARD_PULSE = -100;
-int RIGHT_MOTOR_FORWARD_PULSE = 500;
+const int LEFT_MOTOR_BACKWARD_PULSE = 200;
+const int RIGHT_MOTOR_BACKWARD_PULSE = 100;
+const int LEFT_MOTOR_FORWARD_PULSE = -100;
+const int RIGHT_MOTOR_FORWARD_PULSE = 500;
 
-char THOMAS_NUM[] = "6822414";
-char PENG_NUM[] = "4229132";
+/**
+ * Student numbers.
+ */
+const char THOMAS_NUM[] = "6822414";
+const char PENG_NUM[] = "4229132";
 
 /**
  * Timing constants.
  */
-int FULL_TURN_MILLI = 3500;
-int TILE_DISTANCE = 1200;
+const int FULL_TURN_MILLI = 3500;
+const int TILE_DISTANCE = 1200;
 
 /**
  * printToFirst, Prints text on the 1st line of the LCD display.
@@ -159,11 +163,32 @@ void stop(SoftwareSerial* LCD) {
   analogWrite(LEFT_MOTOR_PIN, 0);
 }
 
+/**
+ * ping, sends a ping of ultrasound and calculates distance to an object.
+ * 
+ * @param
+ */
+int ping() {
+  pinMode(SONAR_PIN, OUTPUT);
+  digitalWrite(SONAR_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(SONAR_PIN, HIGH);
+  delayMicroseconds(5);
+  digitalWrite(SONAR_PIN, LOW)
+  pinMode(SONAR_PIN, INPUT);
+
+  pinMode(SONAR_PIN, INPUT);
+  duration = pulseIn(SONAR_PIN, HIGH);
+  
+  inches = duration / 74 / 2;
+  cm = duration / 29 / 2;
+}
+
 void setup() {
   // Set pins for data transmission (output).
   pinMode(LED_PIN, OUTPUT);
   pinMode(RIGHT_MOTOR_PIN, OUTPUT);
-  pinMode(LEFT_MOTOR_PIN, OUTPUT);
+  pinMode(LEFT_MOTOR_PIN, OUTPlUT);
 }
 
 void loop() {
@@ -175,33 +200,4 @@ void loop() {
   printToSecond(&LCD, PENG_NUM);
   blinkLed(5);
   clearLcd(&LCD);
-
-  // Traverse path.
-  moveForward(TILE_DISTANCE * 2, &LCD);
-  turnRight(2, &LCD);
-  
-  moveForward(TILE_DISTANCE * 2, &LCD);
-  turnRight(2, &LCD);
-  
-  moveForward(TILE_DISTANCE * 3, &LCD);
-  turnRight(2, &LCD);
-  
-  moveForward(TILE_DISTANCE * 3, &LCD);
-  turnRight(2, &LCD);
-  
-  moveForward(TILE_DISTANCE * 2, &LCD);
-  turnLeft(1, &LCD);
-  
-  moveForward(TILE_DISTANCE, &LCD);
-  turnLeft(3, &LCD);
-  
-  moveForward(TILE_DISTANCE * 4, &LCD);
-  turnLeft(2, &LCD);
-  
-  moveForward(TILE_DISTANCE * 2, &LCD);
-  turnLeft(2, &LCD);
-  
-  moveForward(TILE_DISTANCE * 2, &LCD);
-  
-  delay(5000);
 }
